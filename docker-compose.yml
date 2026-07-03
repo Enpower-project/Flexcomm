@@ -1,0 +1,24 @@
+# SCOT demo stack — containerized setup.
+#
+# Prerequisites (once):
+#   cp fast_api/.env.example fast_api/.env
+#   cp frontend/.env.example frontend/.env    # fill in REACT_APP_KEYCLOAK_* values
+#
+# Run:
+#   docker compose up --build
+#
+# Backend:  http://localhost:8000/docs
+# Frontend: http://localhost:3000
+
+services:
+  backend:
+    build: ./fast_api
+    env_file: ./fast_api/.env
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    env_file: ./frontend/.env
+    ports:
+      - "3000:3000"

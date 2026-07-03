@@ -7,7 +7,6 @@ from sqlalchemy.orm import sessionmaker, Session, DeclarativeBase
 ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(ENV_PATH)
 DATABASE_URL = os.getenv("DATABASE_URL")
-print('DATABASE URL: ', DATABASE_URL)
 if not DATABASE_URL:
     raise RuntimeError(f"DATABASE_URL is not set. Expected it in {ENV_PATH}")
 
