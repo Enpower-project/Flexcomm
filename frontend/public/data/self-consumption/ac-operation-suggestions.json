@@ -1,0 +1,199 @@
+{
+  "ac_operation_suggestions": {
+    "title": "Optimal AC Operation Schedule at 25°C",
+    "description": "Suggested AC operation times to maximize PV self-consumption and comfort optimization",
+    "target_temperature": 25,
+    "optimization_strategy": "PV-aligned with comfort enhancement",
+    "daily_schedule": [
+      {
+        "hour": 0,
+        "operation_status": "off",
+        "pv_production": 0,
+        "comfort_boost": false,
+        "energy_source": "grid"
+      },
+      {
+        "hour": 1,
+        "operation_status": "off",
+        "pv_production": 0,
+        "comfort_boost": false,
+        "energy_source": "grid"
+      },
+      {
+        "hour": 2,
+        "operation_status": "on",
+        "pv_production": 0,
+        "comfort_boost": true,
+        "energy_source": "grid",
+        "reason": "comfort_optimization"
+      },
+      {
+        "hour": 3,
+        "operation_status": "on",
+        "pv_production": 0,
+        "comfort_boost": true,
+        "energy_source": "grid",
+        "reason": "comfort_optimization"
+      },
+      {
+        "hour": 4,
+        "operation_status": "off",
+        "pv_production": 0,
+        "comfort_boost": false,
+        "energy_source": "grid"
+      },
+      {
+        "hour": 5,
+        "operation_status": "off",
+        "pv_production": 0,
+        "comfort_boost": false,
+        "energy_source": "grid"
+      },
+      {
+        "hour": 6,
+        "operation_status": "off",
+        "pv_production": 5,
+        "comfort_boost": false,
+        "energy_source": "pv"
+      },
+      {
+        "hour": 7,
+        "operation_status": "off",
+        "pv_production": 15,
+        "comfort_boost": false,
+        "energy_source": "pv"
+      },
+      {
+        "hour": 8,
+        "operation_status": "on",
+        "pv_production": 35,
+        "comfort_boost": true,
+        "energy_source": "pv",
+        "reason": "pv_production_peak"
+      },
+      {
+        "hour": 9,
+        "operation_status": "on",
+        "pv_production": 55,
+        "comfort_boost": true,
+        "energy_source": "pv",
+        "reason": "pv_production_peak"
+      },
+      {
+        "hour": 10,
+        "operation_status": "on",
+        "pv_production": 75,
+        "comfort_boost": true,
+        "energy_source": "pv",
+        "reason": "pv_production_peak"
+      },
+      {
+        "hour": 11,
+        "operation_status": "on",
+        "pv_production": 85,
+        "comfort_boost": true,
+        "energy_source": "pv",
+        "reason": "pv_production_peak"
+      },
+      {
+        "hour": 12,
+        "operation_status": "off",
+        "pv_production": 90,
+        "comfort_boost": false,
+        "energy_source": "pv",
+        "reason": "load_balancing"
+      },
+      {
+        "hour": 13,
+        "operation_status": "on",
+        "pv_production": 85,
+        "comfort_boost": true,
+        "energy_source": "pv",
+        "reason": "pv_production_peak"
+      },
+      {
+        "hour": 14,
+        "operation_status": "on",
+        "pv_production": 80,
+        "comfort_boost": true,
+        "energy_source": "pv",
+        "reason": "pv_production_peak"
+      },
+      {
+        "hour": 15,
+        "operation_status": "off",
+        "pv_production": 70,
+        "comfort_boost": false,
+        "energy_source": "pv",
+        "reason": "load_balancing"
+      },
+      {
+        "hour": 16,
+        "operation_status": "on",
+        "pv_production": 55,
+        "comfort_boost": true,
+        "energy_source": "pv",
+        "reason": "pv_production_moderate"
+      },
+      {
+        "hour": 17,
+        "operation_status": "on",
+        "pv_production": 35,
+        "comfort_boost": true,
+        "energy_source": "pv",
+        "reason": "pv_production_moderate"
+      },
+      {
+        "hour": 18,
+        "operation_status": "off",
+        "pv_production": 15,
+        "comfort_boost": false,
+        "energy_source": "pv"
+      },
+      {
+        "hour": 19,
+        "operation_status": "off",
+        "pv_production": 5,
+        "comfort_boost": false,
+        "energy_source": "grid"
+      },
+      {
+        "hour": 20,
+        "operation_status": "off",
+        "pv_production": 0,
+        "comfort_boost": false,
+        "energy_source": "grid"
+      },
+      {
+        "hour": 21,
+        "operation_status": "off",
+        "pv_production": 0,
+        "comfort_boost": false,
+        "energy_source": "grid"
+      },
+      {
+        "hour": 22,
+        "operation_status": "on",
+        "pv_production": 0,
+        "comfort_boost": true,
+        "energy_source": "grid",
+        "reason": "comfort_optimization"
+      },
+      {
+        "hour": 23,
+        "operation_status": "on",
+        "pv_production": 0,
+        "comfort_boost": true,
+        "energy_source": "grid",
+        "reason": "comfort_optimization"
+      }
+    ],
+    "summary": {
+      "total_operation_hours": 12,
+      "pv_aligned_hours": 8,
+      "comfort_optimization_hours": 4,
+      "estimated_energy_savings": "32%",
+      "comfort_improvement": "15%"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "_comment": "Static per-hour comfort metrics for the demo_pilot user. Index = hour of day (0-23). indoor_temp 22-25C, outdoor_temp 21-32C (peak midday), humidity 40-70%, comfort_index in %.",
+  "hourly": [
+    { "hour": 0,  "indoor_temp": 22.8, "outdoor_temp": 21.5, "humidity": 66, "comfort_index": 85 },
+    { "hour": 1,  "indoor_temp": 22.6, "outdoor_temp": 21.2, "humidity": 67, "comfort_index": 85 },
+    { "hour": 2,  "indoor_temp": 22.4, "outdoor_temp": 21.1, "humidity": 68, "comfort_index": 84 },
+    { "hour": 3,  "indoor_temp": 22.3, "outdoor_temp": 21.0, "humidity": 69, "comfort_index": 84 },
+    { "hour": 4,  "indoor_temp": 22.2, "outdoor_temp": 21.0, "humidity": 70, "comfort_index": 83 },
+    { "hour": 5,  "indoor_temp": 22.1, "outdoor_temp": 21.0, "humidity": 70, "comfort_index": 83 },
+    { "hour": 6,  "indoor_temp": 22.2, "outdoor_temp": 21.6, "humidity": 68, "comfort_index": 84 },
+    { "hour": 7,  "indoor_temp": 22.4, "outdoor_temp": 22.6, "humidity": 64, "comfort_index": 86 },
+    { "hour": 8,  "indoor_temp": 22.7, "outdoor_temp": 24.0, "humidity": 60, "comfort_index": 88 },
+    { "hour": 9,  "indoor_temp": 23.0, "outdoor_temp": 25.6, "humidity": 56, "comfort_index": 89 },
+    { "hour": 10, "indoor_temp": 23.4, "outdoor_temp": 27.1, "humidity": 52, "comfort_index": 88 },
+    { "hour": 11, "indoor_temp": 23.8, "outdoor_temp": 28.6, "humidity": 48, "comfort_index": 86 },
+    { "hour": 12, "indoor_temp": 24.1, "outdoor_temp": 30.0, "humidity": 45, "comfort_index": 83 },
+    { "hour": 13, "indoor_temp": 24.4, "outdoor_temp": 31.1, "humidity": 43, "comfort_index": 80 },
+    { "hour": 14, "indoor_temp": 24.7, "outdoor_temp": 32.0, "humidity": 41, "comfort_index": 77 },
+    { "hour": 15, "indoor_temp": 25.0, "outdoor_temp": 31.5, "humidity": 40, "comfort_index": 75 },
+    { "hour": 16, "indoor_temp": 24.9, "outdoor_temp": 30.6, "humidity": 42, "comfort_index": 76 },
+    { "hour": 17, "indoor_temp": 24.7, "outdoor_temp": 29.1, "humidity": 45, "comfort_index": 79 },
+    { "hour": 18, "indoor_temp": 24.4, "outdoor_temp": 27.6, "humidity": 49, "comfort_index": 82 },
+    { "hour": 19, "indoor_temp": 24.0, "outdoor_temp": 26.0, "humidity": 53, "comfort_index": 85 },
+    { "hour": 20, "indoor_temp": 23.7, "outdoor_temp": 24.5, "humidity": 57, "comfort_index": 87 },
+    { "hour": 21, "indoor_temp": 23.4, "outdoor_temp": 23.5, "humidity": 60, "comfort_index": 88 },
+    { "hour": 22, "indoor_temp": 23.1, "outdoor_temp": 22.6, "humidity": 62, "comfort_index": 87 },
+    { "hour": 23, "indoor_temp": 22.9, "outdoor_temp": 22.0, "humidity": 64, "comfort_index": 86 }
+  ]
+}

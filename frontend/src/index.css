@@ -1,0 +1,81 @@
+:root {
+  /* --primary-color: #64CCA4; */
+  /* --secondary-color: #244C94;
+  --tertiarty-color: rgb(252, 188, 12);
+  --selection-color: rgb(185, 150, 110);
+  --selection-hover-color: rgb(196, 164, 132);
+  --primary-color: rgb(100, 204, 164);
+  --primary-dark-color: rgb(1, 123, 112); */
+  --error-color: #ff5c5c;
+  --warning-color: #ffc814;
+  --success-color: #75d16f;
+
+  --secondary-color: #244C94;
+  --tertiarty-color: rgb(252, 188, 12);
+  --selection-color: #619DBE;
+  --selection-hover-color: #1a759f;
+  --primary-color: #76c893;
+  --primary-dark-color: #444444;
+
+html,
+body,
+#root { 
+  height: 100%;
+  margin: 0; 
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* -------------------- */
+/* Dashboard Hover Effects */
+/* -------------------- */
+.dashboard-card-hover {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
+  /* cursor: pointer !important; */
+}
+
+.dashboard-card-hover:hover {
+  transform: scale(1.02) !important;
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15) !important;
+}
+
+.dashboard-large-card-hover {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
+  /* cursor: pointer !important; */
+}
+
+.dashboard-large-card-hover:hover {
+  transform: scale(1.01) !important;
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15) !important;
+}
+
+
+
+/* ---------- */
+/* MenuButton */
+/* ---------- */
+.iconButtonMenuItemStack:hover {
+  background: #f3f3f3 !important;
+}
+
+.iconButtonMenuItem {
+  width: 100% !important;
+}
+
+.iconButtonMenuItem:hover {
+  background: none !important;
+}

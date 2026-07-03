@@ -1,0 +1,15 @@
+{
+  "_comment": "Static inputs for the demo optimization. 48 half-hour slots, index 0 = 00:00 ... 47 = 23:30. prod_pct = allocated PV production (% of peak). hvac_baseline = the un-optimized/forecast schedule (morning + evening grid hours) used as the comparison baseline. The suggested (optimized) AC schedule is no longer stored here — demoData.js derives it per run from the noised baseline metrics.",
+  "prod_pct": [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    5, 12, 22, 32, 42, 52, 62, 70, 78, 84, 90, 94,
+    97, 99, 100, 99, 96, 92, 86, 79, 70, 60, 49, 38,
+    28, 19, 11, 5, 2, 0, 0, 0, 0, 0, 0, 0
+  ],
+  "hvac_baseline": [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0
+  ]
+}
