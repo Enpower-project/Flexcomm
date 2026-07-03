@@ -61,7 +61,7 @@ Thumbs.db
 *.log
 *.pt
 
-*.csv
+# *.csv
 /fast_api/apisrc/core/transfer_backup_newdb.py
 .codex
 models/
