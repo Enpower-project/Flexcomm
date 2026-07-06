@@ -88,7 +88,7 @@ FLEXCOMM ingests data through automated API connections to the pilot-site infras
 
 - **Platform:** <!-- TODO: insert live frontend URL -->
 - **API documentation:** <https://flexcomm-backend.enpower.epu.ntua.gr/docs>
-- **Demo account:** username `demo_pilot`, password `<!-- TODO: insert demo password -->`
+- **Demo account:** username `demo_pilot`, password `demo`
 
 Logging in as `demo_pilot` activates **demo mode**: the member-level dashboard is served from bundled, anonymized demo data instead of live member data, so the full HVAC-scheduling workflow can be explored without exposing any personal data. The same demo mode works on a local checkout once Keycloak is configured.
 
