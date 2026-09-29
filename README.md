@@ -4,7 +4,7 @@
 
 FLEXCOMM is a web platform that helps energy communities consume more of their own photovoltaic (PV) production. It combines two complementary services in a single tool:
 
-- **Community-level service** (public) — aggregates community-wide consumption and PV park production into 24-hour measured and forecast curves, computes self-consumption KPIs (self-consumption rate, self-sufficiency rate, wasted energy, avoided CO₂ emissions), and translates windows of surplus PV generation into natural-language load-shifting suggestions.
+- **Community-level service** (public) — aggregates community-wide consumption and PV park production into 24-hour measured and forecast curves, computes self-consumption KPIs (self-consumption rate, self-sufficiency rate, PV surplus, avoided CO₂ emissions), and translates windows of surplus PV generation into natural-language load-shifting suggestions.
 - **Member-level HVAC service** (authenticated) — runs a non-intrusive, predict-then-optimize pipeline on an individual household's aggregated smart-meter signal: unsupervised HVAC disaggregation, indoor temperature/humidity forecasting (TCN, LightGBM, CNN–LSTM), and a MILP scheduler (Pyomo/HiGHS) that produces a 24-hour, PV-aligned heating/cooling schedule under PMV/PPD thermal-comfort constraints. No appliance-level sub-metering is required — only a standard smart meter and one low-cost indoor temperature/humidity sensor.
 
 FLEXCOMM is developed within the [Horizon Europe ENPOWER project](https://enpower-project.eu) and is deployed on Chalki island, Greece (`gr` pilot), with the member-level service replicated in the BCS Energia community in Békéscsaba, Hungary (`hu` pilot).

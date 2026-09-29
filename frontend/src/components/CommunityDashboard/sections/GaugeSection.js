@@ -167,7 +167,7 @@ const GaugeSection = ({
         }}>
           <DashboardGauge
             type="pv_wasted"
-            title="PV Energy Wasted Today"
+            title="PV Surplus Today"
             wastedEnergyKWh={gaugeData.pvEnergyWasted}
           />
         </Paper>
