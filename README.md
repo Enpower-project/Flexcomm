@@ -4,8 +4,8 @@
 
 FLEXCOMM is a web platform that helps energy communities consume more of their own photovoltaic (PV) production. It combines two complementary services in a single tool:
 
-- **Community-level service** (public) — aggregates community-wide consumption and PV park production into 24-hour measured and forecast curves, computes self-consumption KPIs (self-consumption rate, self-sufficiency rate, PV surplus, avoided CO₂ emissions), and translates windows of surplus PV generation into natural-language load-shifting suggestions.
-- **Member-level HVAC service** (authenticated) — runs a non-intrusive, predict-then-optimize pipeline on an individual household's aggregated smart-meter signal: unsupervised HVAC disaggregation, indoor temperature/humidity forecasting (TCN, LightGBM, CNN–LSTM), and a MILP scheduler (Pyomo/HiGHS) that produces a 24-hour, PV-aligned heating/cooling schedule under PMV/PPD thermal-comfort constraints. No appliance-level sub-metering is required — only a standard smart meter and one low-cost indoor temperature/humidity sensor.
+- **Community-level service** — aggregates community-wide consumption and PV park production into 24-hour measured and forecast curves, computes self-consumption KPIs (self-consumption rate, self-sufficiency rate, PV surplus, avoided CO₂ emissions), and translates windows of surplus PV generation into natural-language load-shifting suggestions.
+- **Member-level HVAC service** — runs a non-intrusive, predict-then-optimize pipeline on an individual household's aggregated smart-meter signal: unsupervised HVAC disaggregation, indoor temperature/humidity forecasting (TCN, LightGBM, CNN–LSTM), and a MILP scheduler (Pyomo/HiGHS) that produces a 24-hour, PV-aligned heating/cooling schedule under PMV/PPD thermal-comfort constraints. No appliance-level sub-metering is required — only a standard smart meter and one low-cost indoor temperature/humidity sensor.
 
 FLEXCOMM is developed within the [Horizon Europe ENPOWER project](https://enpower-project.eu) and is deployed on Chalki island, Greece (`gr` pilot), with the member-level service replicated in the BCS Energia community in Békéscsaba, Hungary (`hu` pilot).
 
@@ -40,7 +40,7 @@ Flexcomm/
 
 You can run FLEXCOMM either **locally with `run.sh`** or **with Docker Compose**. Both start the backend on `http://localhost:8000` (interactive API docs at `/docs`) and the frontend on `http://localhost:3000`.
 
-The public community dashboard and the bundled demo data work out of the box with the placeholder values from the `.env` templates — no database or external services are needed for a demo run.
+Without login, the app opens in demo mode on the bundled data in `frontend/public/data/`, so no database or external services are needed for a demo run. The frontend only needs the Keycloak realm set in `frontend/.env` to be reachable (see [Configuration](#configuration)).
 
 ### Prerequisites
 
@@ -73,24 +73,59 @@ docker compose up --build
 
 ### What you can explore
 
-| URL | View | Login required |
-|---|---|---|
-| `http://localhost:3000/` | Homepage | No |
-| `http://localhost:3000/dashboard` | Community-level dashboard (24-h curves, KPIs, load-shifting suggestions) | No |
-| `http://localhost:3000/self-consumption-optimization` | Member-level HVAC scheduling dashboard | Yes (Keycloak) |
-| `http://localhost:8000/docs` | Interactive REST API documentation (Swagger UI) | No |
+| URL | View | Without login | After login |
+|---|---|---|---|
+| `http://localhost:3000/` | Homepage | Available | Available |
+| `http://localhost:3000/dashboard` | Community-level dashboard (24-h curves, KPIs, load-shifting suggestions) | Demo data | Pilot data |
+| `http://localhost:3000/self-consumption-optimization` | Member-level HVAC scheduling dashboard | Demo data | The member's own household |
+| `http://localhost:8000/docs` | Interactive REST API documentation (Swagger UI) | Available | Available |
 
-To use the authenticated member-level view locally, fill in the `REACT_APP_KEYCLOAK_*` values in `frontend/.env` (see [Configuration](#configuration)).
+Logging in locally requires a Keycloak realm with your users (set in `frontend/.env`) and a populated database (see [Configuration](#configuration) and [Path 2](#path-2-running-the-member-level-service-on-your-own-data)).
 
-## Demonstration Access
+## Evaluating FLEXCOMM without the pilot data
 
-FLEXCOMM ingests data through automated API connections to the pilot-site infrastructure (smart meters, the PV park, indoor sensors, and weather services) rather than user-supplied datasets, so the **live pilot deployment is the intended entry point for evaluating the software**:
+The operational data of the ENPOWER pilots (household and community smart-meter series, PV park production, indoor sensor readings) are managed by the pilot sites under the project's data-governance provisions and cannot be published. FLEXCOMM can be evaluated in two ways without them.
 
-- **Platform:** <!-- TODO: insert live frontend URL -->
+### Path 1: the demonstration instance (no login needed)
+
+- **Live deployment:** <!-- TODO: insert live frontend URL -->
 - **API documentation:** <https://flexcomm-backend.enpower.epu.ntua.gr/docs>
-- **Demo account:** username `demo_pilot`, password `demo`
+- **Without login** the app opens in demo mode. Both the community-level dashboard and the member-level views are served from bundled, anonymized data in `frontend/public/data/`, so the full workflow (24-hour curves, self-consumption KPIs, load-shifting suggestions, live indoor conditions, optimization request, recommended HVAC schedule, advanced view) can be explored without exposing any pilot data.
+- **With login**, pilot users see the operational Chalki and BCS Energia data.
+- **Locally:** the same demo mode runs on a local checkout (`./run.sh` or Docker Compose, see [Quick Start](#quick-start)) once the `REACT_APP_KEYCLOAK_*` values in `frontend/.env` point to a Keycloak realm.
 
-Logging in as `demo_pilot` activates **demo mode**: the member-level dashboard is served from bundled, anonymized demo data instead of live member data, so the full HVAC-scheduling workflow can be explored without exposing any personal data. The same demo mode works on a local checkout once Keycloak is configured.
+### Path 2: running the member-level service on your own data
+
+This is how the member-level service was replicated for the BCS Energia community (Hungary). A new site is onboarded through configuration and, where needed, a data-access adapter; the forecasting, scheduling and interface code stay unchanged.
+
+1. **Register the pilot and its sites** in `fast_api/apisrc/core/pilot_config.py`: one `PilotConfig` (code, time zone, coordinates, cooling and heating months, `data_source`) with one `SiteInfo` per building (name, PV capacity, residential or commercial use, optional disaggregation calibration).
+2. **Connect the data** in one of two ways:
+   - `data_source="db"`: load the series into the PostgreSQL tables defined in `fast_api/apisrc/core/models.py`;
+   - `data_source="api"`: write a data-access adapter that reads from your metering platform, following the Hungarian adapter in `fast_api/apisrc/utils/hungary_utils.py`.
+
+   | Input | Table | Fields | Resolution |
+   |---|---|---|---|
+   | Site metadata | `sites` | `name`, `latitude`, `longitude`; optional disaggregation calibration (`temp_low_band`, `temp_high_band`, `active_ratio`, `high_ratio`, `q`, …) | — |
+   | Aggregated household load | `consumption_data` | `site_id`, `timestamp`, `value` (kWh per interval) | 30 min |
+   | Indoor environment | `comfort_data` | `site_id`, `timestamp`, `tin` (°C), `rh` (%); `hvac_mode` (0/1/2) only if the HVAC unit happens to be sub-metered | 30 min |
+   | Outdoor weather | `environmental_data` | `site_id`, `timestamp`, `tout` (°C), `rh_out` (%), `sw_out` (W/m²) | 30 min |
+
+   No appliance-level metering is needed: HVAC operation is inferred from the aggregated load by the unsupervised disaggregation stage.
+3. **Register the indoor-environment forecasters.** The disaggregation, RC identification and MILP stages run directly on the data above. The forecasters used by the comfort-repair loop are loaded per site from the MinIO model registry, so they must first be trained for the new household. The model architectures and training procedure are described in the companion study ([doi:10.2139/ssrn.6496717](https://doi.org/10.2139/ssrn.6496717)). Upload the trained files with:
+
+   ```bash
+   cd fast_api/apisrc/utils
+   python minio_model_store.py upload --country <pilot-code> --models-dir ./models --site <site>
+   ```
+
+   Expected files per site: `best_model_v3.pt` (TCN, HVAC off), `lgbm_cooling.pkl` and `lgbm_heating.pkl` (LightGBM, HVAC on), `best_ah.pt` and `ah_features.json` (CNN–LSTM, absolute humidity), plus the scalers `scalers/<site>/scaler_v3.pkl` and `scalers/<site>/scaler_ah.pkl`.
+4. **Run the pipeline** through the REST API (interactive documentation at `/docs`):
+   - `POST /optimize/{site_id}/disaggregation` infers the HVAC modes from the aggregated load;
+   - `POST /optimize/{site_id}/run` queues a scheduling run (returns `202` and a `run_id`); poll `GET /optimize/runs/{run_id}` and read the per-timestep schedule, indoor trajectories and comfort index from `GET /optimize/runs/{run_id}/data`.
+
+   PV availability is derived from the site's PV forecast; a 48-step binary profile can also be passed explicitly as `manual_pv_48`.
+
+The MILP weights, comfort band and minimum comfort threshold were configured for the Chalki pilot and should be re-tuned for other sites.
 
 ## Architecture
 
@@ -166,11 +201,11 @@ Copy [fast_api/.env.example](fast_api/.env.example) to `fast_api/.env`. The temp
 
 ### Frontend (`frontend/.env`)
 
-Copy [frontend/.env.example](frontend/.env.example) to `frontend/.env`. `REACT_APP_API_BASE_URL` points at the backend (default `http://localhost:8000`). The `REACT_APP_KEYCLOAK_*` values are required only for the authenticated member-level view; the public pages work without them.
+Copy [frontend/.env.example](frontend/.env.example) to `frontend/.env`. `REACT_APP_API_BASE_URL` points at the backend (default `http://localhost:8000`). The `REACT_APP_KEYCLOAK_*` values set the Keycloak realm that the frontend checks at startup and uses for login; without login, the app runs in demo mode.
 
 ### Pilots
 
-Pilot sites are defined in [fast_api/apisrc/core/pilot_config.py](fast_api/apisrc/core/pilot_config.py). Each pilot specifies its timezone, coordinates, data-source strategy, and per-site parameters (PV capacity, HVAC capacity, disaggregation calibration), making it straightforward to add a new site.
+Pilot sites are defined in [fast_api/apisrc/core/pilot_config.py](fast_api/apisrc/core/pilot_config.py). Each pilot specifies its timezone, coordinates, data-source strategy, and per-site parameters (PV capacity, HVAC capacity, disaggregation calibration), so a new site is added through configuration; see [Path 2](#path-2-running-the-member-level-service-on-your-own-data) for the full onboarding steps.
 
 | Pilot | Location | Service layers | Data source |
 |---|---|---|---|
@@ -195,4 +230,4 @@ MIT — see [LICENSE](LICENSE).
 
 This work is part of the [ENPOWER](https://enpower-project.eu) project, funded by the European Union's Horizon Europe research and innovation programme under Grant Agreement No. 101096354. The content of this repository is the sole responsibility of its authors and does not necessarily reflect the views of the European Commission.
 
-The operational data ingested by the platform (community and household smart-meter time series, PV park production, indoor environmental measurements) are managed by the respective pilot sites under the data-governance provisions of the ENPOWER project and are not publicly available; the bundled demo data and the demonstration account provide interactive access to the platform's functionality without exposing member-level personal data.
+The operational data ingested by the platform (community and household smart-meter time series, PV park production, indoor environmental measurements) are managed by the respective pilot sites under the data-governance provisions of the ENPOWER project and are not publicly available; the demonstration instance (see [Evaluating FLEXCOMM without the pilot data](#evaluating-flexcomm-without-the-pilot-data)) provides interactive access to the platform's functionality without exposing any pilot data.
