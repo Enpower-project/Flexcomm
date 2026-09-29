@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useKeycloak } from '@react-keycloak/web';
-import { initPilot, getCurrentPilot, getCurrentPilotTimezone, DEMO_USERNAME } from '../services/api';
+import { initPilot, getCurrentPilot, getCurrentPilotTimezone, isDemoMode } from '../services/api';
 
 const PilotContext = createContext({ pilot: 'gr', pilotTimezone: 'Europe/Athens', isAdmin: false, userId: null });
 
@@ -12,19 +12,18 @@ export const PilotProvider = ({ children }) => {
     const [userId, setUserId] = useState(null);
 
     useEffect(() => {
+        if (isDemoMode()) {
+            // Demo (anonymous visitor or demo_pilot): fixed gr pilot, non-admin,
+            // userId matching the site_id in public/data/demo/sites.json —
+            // independent of whatever attributes the Keycloak demo account carries.
+            initPilot(undefined);
+            setPilot(getCurrentPilot());
+            setPilotTimezone(getCurrentPilotTimezone());
+            setIsAdmin(false);
+            setUserId(1);
+            return;
+        }
         if (keycloak.authenticated) {
-            const isDemo = keycloak.tokenParsed?.preferred_username === DEMO_USERNAME;
-            if (isDemo) {
-                // Demo user: fixed gr pilot, non-admin, userId matching demo_site's
-                // site_id in public/data/demo/sites.json — independent of whatever
-                // attributes the Keycloak demo account carries.
-                initPilot(undefined);
-                setPilot(getCurrentPilot());
-                setPilotTimezone(getCurrentPilotTimezone());
-                setIsAdmin(false);
-                setUserId(1);
-                return;
-            }
             const country = keycloak.tokenParsed?.country?.toLowerCase();
             initPilot(country);
             setPilot(getCurrentPilot());

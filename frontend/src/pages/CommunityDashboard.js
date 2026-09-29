@@ -8,6 +8,7 @@ import { useEnergyData } from '../hooks/useEnergyData';
 import { useDemoEnergyData } from '../hooks/useDemoEnergyData';
 import { useEnvironmentalImpact } from '../hooks/useEnvironmentalImpact';
 import { useWeatherData } from '../hooks/useWeatherData';
+import { isDemoMode } from '../services/api';
 
 import DashboardLayout from '../components/CommunityDashboard/DashboardLayout';
 import EnergyChartSection from '../components/CommunityDashboard/sections/EnergyChartSection';
@@ -17,8 +18,6 @@ import RecommendationsSection from '../components/CommunityDashboard/sections/Re
 
 HighchartsMore(Highcharts);
 SolidGauge(Highcharts);
-
-const DEMO_USERNAME = 'demo_pilot';
 
 const DEMO_WEATHER_FALLBACK = {
   temperature_celsius: 32,
@@ -72,9 +71,9 @@ const DemoDashboard = () => {
 };
 
 const CommunityDashboard = () => {
-  const { keycloak } = useKeycloak();
-  const isDemo = keycloak.tokenParsed?.preferred_username === DEMO_USERNAME;
-  return isDemo ? <DemoDashboard /> : <LiveDashboard />;
+  // Subscribe to auth changes so the dashboard switches once login state resolves.
+  useKeycloak();
+  return isDemoMode() ? <DemoDashboard /> : <LiveDashboard />;
 };
 
 export default CommunityDashboard;

@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        // Cross-origin errors (e.g. from browser extensions poking at the Keycloak
+        // iframes) arrive as a bare "Script error." with no details; don't let them
+        // trigger the dev error overlay.
+        window.addEventListener('error', function (e) {
+            if (e.message === 'Script error.' && !e.filename) e.stopImmediatePropagation();
+        });
+    </script>
     <meta charset="utf-8"/>
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>

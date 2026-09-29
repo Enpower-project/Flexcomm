@@ -17,11 +17,13 @@ import {
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-// Demo mode: when the authenticated Keycloak user is `demo_pilot`, every API
-// call below is bypassed and served from local JSON (see ./demoData). This lets
-// the SelfConsumptionOptimization page run as a fully static demo with no backend.
+// Demo mode: when no one is logged in (the default on opening the app) or the
+// authenticated Keycloak user is `demo_pilot`, every API call below is bypassed
+// and served from local JSON (see ./demoData). This lets the app run as a fully
+// static demo with no backend.
 export const DEMO_USERNAME = 'demo_pilot';
 export const isDemoMode = () =>
+    !my_keycloak?.authenticated ||
     my_keycloak?.tokenParsed?.preferred_username === DEMO_USERNAME;
 
 // Pilot code: "gr" for Greek (Chalki), "hu" for Hungarian (Békéscsaba)

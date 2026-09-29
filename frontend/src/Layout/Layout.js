@@ -32,6 +32,7 @@ import FooterContent from '../components/FooterContent';
 import MenuButton from "./MenuButton";
 import { appbarMenuButtonItems } from "./appbarMenuButtonItems";
 import { usePilot } from '../context/PilotContext';
+import { logout } from '../Keycloak';
 
 const drawerWidth = 240;
 
@@ -71,7 +72,7 @@ export default function Layout({ children }) {
         },
     ];
 
-    const handleSignOut = () => keycloak.logout();
+    const handleSignOut = () => logout();
 
     return (
         // 1. Overall Page Wrapper: Flex column, min 100vh height

@@ -216,8 +216,8 @@ export const useAvailableUsers = () => {
       }
     };
 
-    if (keycloak?.authenticated) {
-      // Demo user always runs as the gr pilot, regardless of any country
+    if (keycloak?.authenticated || isDemoMode()) {
+      // Demo mode always runs as the gr pilot, regardless of any country
       // attribute on the Keycloak demo account.
       initPilot(isDemoMode() ? undefined : keycloak.tokenParsed?.country?.toLowerCase());
       loadUsers();

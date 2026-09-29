@@ -30,6 +30,7 @@ import {
     ExitToApp
 } from '@mui/icons-material';
 import { usePilot } from '../context/PilotContext';
+import { logout } from '../Keycloak';
 
 
 const Homepage = () => {
@@ -48,7 +49,7 @@ const Homepage = () => {
     };
 
     const handleSignOut = () => {
-        keycloak.logout();
+        logout();
         handleProfileMenuClose();
     };
 
@@ -109,6 +110,18 @@ const Homepage = () => {
                         </Box>
 
                         {/* Profile on the right */}
+                        {!keycloak.authenticated && (
+                            <Box sx={{ position: 'absolute', right: 0 }}>
+                                <Button
+                                    size="small"
+                                    variant="text"
+                                    onClick={() => keycloak.login()}
+                                    sx={{ color: 'text.disabled', textTransform: 'none', minWidth: 0, '&:hover': { color: 'text.secondary', bgcolor: 'transparent' } }}
+                                >
+                                    Log in
+                                </Button>
+                            </Box>
+                        )}
                         {keycloak.authenticated && (
                             <Box sx={{ position: 'absolute', right: 0, display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Typography variant="body2" sx={{ color: 'text.secondary', mr: 1 }}>
