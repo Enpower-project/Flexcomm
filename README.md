@@ -78,7 +78,7 @@ docker compose up --build
 | `http://localhost:3000/` | Homepage | Available | Available |
 | `http://localhost:3000/dashboard` | Community-level dashboard (24-h curves, KPIs, load-shifting suggestions) | Demo data | Pilot data |
 | `http://localhost:3000/self-consumption-optimization` | Member-level HVAC scheduling dashboard | Demo data | The member's own household |
-| `http://localhost:8000/docs` | Interactive REST API documentation (Swagger UI) | Available | Available |
+| `http://localhost:8000/docs` | Interactive REST API documentation (Swagger UI) | Readable | Endpoints callable via **Authorize** |
 
 Logging in locally requires a Keycloak realm with your users (set in `frontend/.env`) and a populated database (see [Configuration](#configuration) and [Path 2](#path-2-running-the-member-level-service-on-your-own-data)).
 
@@ -164,7 +164,7 @@ In the full pilot deployment, data collection jobs run on a schedule to ingest s
 
 ## REST API Overview
 
-All endpoints are documented interactively at `/docs`. Routes accept an optional `?pilot=gr` (default) or `?pilot=hu` query parameter where relevant.
+All endpoints are documented interactively at `/docs`. The documentation is public, but every API route requires a Keycloak access token (`Authorization: Bearer <token>`) and answers `401` without one. To call endpoints from Swagger UI, click **Authorize** and log in with a Keycloak account of the configured realm. Routes accept an optional `?pilot=gr` (default) or `?pilot=hu` query parameter where relevant.
 
 | Area | Endpoint | Description |
 |---|---|---|
@@ -194,6 +194,7 @@ Copy [fast_api/.env.example](fast_api/.env.example) to `fast_api/.env`. The temp
 | Group | Purpose |
 |---|---|
 | `DATABASE_URL` | Application PostgreSQL database (time-series, sites, optimization runs) |
+| `KEYCLOAK_URL`, `KEYCLOAK_REALM`, `KEYCLOAK_CLIENT_ID` | Token validation for all API routes and the Swagger UI login; the client's Valid Redirect URIs must include `<backend-url>/docs/oauth2-redirect` |
 | `API_KEY`, `SIEMENS_*`, `METEOGEN_*` | External data providers for the `gr` (Chalki) pilot |
 | Sensor UUIDs (`*_tin`, `*_rh`, `*_consumption`, `sensor_id_*`) | Per-site indoor sensor and meter identifiers for both pilots |
 | `MINIO_*`, `BUCKET_NAME`, `MLFLOW_*`, `AWS_*` | Optional model artifact store and experiment tracking |

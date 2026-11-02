@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useKeycloak } from "@react-keycloak/web";
-import { fetchProductionData, fetchUsers, fetchConsumptionData, fetchUserConsumption, getCurrentPilot, initPilot, isDemoMode } from '../services/api';
+import { fetchProductionData, fetchUsers, fetchConsumptionData, fetchUserConsumption, getCurrentPilot, initPilot, isDemoMode, withAuthToken } from '../services/api';
 import { demoLatestMetrics } from '../services/demoData';
 import grNameConfig from '../gr_name_config.json';
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +12,7 @@ export const apiClient = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
   timeout: 10_000,
 });
+apiClient.interceptors.request.use(withAuthToken);
 
 const mergeUsers = (apiUsers = []) => {
     return apiUsers.map((user) => ({ ...user }));
@@ -190,9 +191,7 @@ export const useAvailableUsers = () => {
 
     const loadUsers = async () => {
       try {
-        const response = await fetchUsers(keycloak?.token, {
-          signal: controller.signal,
-        });
+        const response = await fetchUsers({ signal: controller.signal });
         let usersApi = [];
         if (response && response?.length){
           const isGr = getCurrentPilot() === 'gr';

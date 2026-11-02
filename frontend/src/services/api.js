@@ -53,6 +53,20 @@ const getTodayDateString = () => {
 };
 
 
+// The backend requires a Keycloak access token on every API route. Refresh it
+// if it's about to expire, then attach it to the request.
+export const withAuthToken = async (config) => {
+    if (my_keycloak.authenticated) {
+        try {
+            await my_keycloak.updateToken(30);
+        } catch {
+            // refresh failed — send the current token; the backend answers 401
+        }
+        config.headers.Authorization = `Bearer ${my_keycloak.token}`;
+    }
+    return config;
+};
+
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 25000,
@@ -60,15 +74,15 @@ const apiClient = axios.create({
     Accept: 'application/json',
   },
 });
+apiClient.interceptors.request.use(withAuthToken);
 
 
-export const fetchUsers = async (token) => {
+export const fetchUsers = async ({ signal } = {}) => {
     if (isDemoMode()) {
         return demoFetchUsers();
     }
     try {
-        const config = token ? { headers: { Authorization: `Bearer ${token}` } } : undefined;
-        const response = await axios.get(`${API_BASE_URL}/metadata/get_all_buildings?pilot=${_pilot}`, config);
+        const response = await apiClient.get(`/metadata/get_all_buildings?pilot=${_pilot}`, { signal });
         return response.data; // Expect either an array or { users: [...] }
     } catch (error) {
         console.error('Error fetching users:', error.response?.data || error.message);
