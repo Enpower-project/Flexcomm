@@ -19,14 +19,6 @@ import RecommendationsSection from '../components/CommunityDashboard/sections/Re
 HighchartsMore(Highcharts);
 SolidGauge(Highcharts);
 
-const DEMO_WEATHER_FALLBACK = {
-  temperature_celsius: 32,
-  humidity_percent: 55,
-  wind_speed_kmh: 12,
-  solar_radiation_ghi_instant: 750,
-};
-
-
 const DashboardContent = ({ energyData, impactData, impactLoading, impactError, currentWeatherData, weatherLoading, weatherError }) => (
   <DashboardLayout>
     <EnergyChartSection {...energyData} />
@@ -59,13 +51,14 @@ const LiveDashboard = () => {
 const DemoDashboard = () => {
   const energyData = useDemoEnergyData();
   const { impactData, impactLoading, impactError } = useEnvironmentalImpact();
-  const { currentWeatherData, weatherLoading, weatherError } = useWeatherData();
-  const weatherData = !weatherLoading && !currentWeatherData ? DEMO_WEATHER_FALLBACK : currentWeatherData;
+  // Demo weather is live from Open-Meteo and never errors: demoCurrentWeather
+  // falls back to static values itself when the request fails.
+  const { currentWeatherData, weatherLoading } = useWeatherData();
   return (
     <DashboardContent
       energyData={energyData}
       impactData={impactData} impactLoading={impactLoading} impactError={impactError}
-      currentWeatherData={weatherData} weatherLoading={weatherLoading} weatherError={null}
+      currentWeatherData={currentWeatherData} weatherLoading={weatherLoading} weatherError={null}
     />
   );
 };

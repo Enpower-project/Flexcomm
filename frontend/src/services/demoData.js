@@ -415,10 +415,49 @@ export const demoCancelOptimizationRun = async () => {
   return { status: 'cancelled' };
 };
 
-/** Current weather (dashboard info cards). */
-export const demoCurrentWeather = async () => ({
+// Same Open-Meteo query the backend's /weather/current makes for Chalki, called
+// straight from the browser (no key, CORS-enabled) so the demo shows the real
+// current weather without needing the backend.
+const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast?' + new URLSearchParams({
+  latitude: '36.2333',
+  longitude: '27.5667',
+  current: 'temperature_2m,relative_humidity_2m,wind_speed_10m,shortwave_radiation_instant',
+  timezone: 'Europe/Athens',
+});
+const WEATHER_TIMEOUT_MS = 10000;
+
+const DEMO_WEATHER_FALLBACK = {
   temperature_celsius: 30,
   humidity_percent: 45,
   wind_speed_kmh: 10,
   solar_radiation_ghi_instant: 700,
-});
+};
+
+/**
+ * Current weather (dashboard info cards): live from Open-Meteo, falling back
+ * to static values if the request fails, times out or returns bad data.
+ */
+export const demoCurrentWeather = async () => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), WEATHER_TIMEOUT_MS);
+  try {
+    const response = await fetch(OPEN_METEO_URL, { signal: controller.signal });
+    if (!response.ok) throw new Error(`Open-Meteo returned HTTP ${response.status}`);
+    const { current } = await response.json();
+    const weather = {
+      temperature_celsius: current?.temperature_2m,
+      humidity_percent: current?.relative_humidity_2m,
+      wind_speed_kmh: current?.wind_speed_10m,
+      solar_radiation_ghi_instant: current?.shortwave_radiation_instant,
+    };
+    if (!Object.values(weather).every(Number.isFinite)) {
+      throw new Error('Open-Meteo response is missing current weather values');
+    }
+    return weather;
+  } catch (err) {
+    console.warn('Live weather unavailable, using demo fallback:', err.message);
+    return DEMO_WEATHER_FALLBACK;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
